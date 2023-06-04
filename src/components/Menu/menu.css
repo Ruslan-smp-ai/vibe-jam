@@ -40,6 +40,9 @@ a:hover {
   margin-left: auto;
   margin-right: auto;
 }
+.menu-element {
+  border-radius: 5px;
+}
 .menu-element.active {
   background-color: #151515;
 }

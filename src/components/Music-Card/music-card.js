@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './music-card.css';
-import likeInactive from '../../svg/like-order.svg'
 import moreOrder from '../../svg/more-order.svg'
 const MusicCard = (props) => {
-  const { title, author, imagePath, small, likeIcon, moreIcon, showOverlay, children, onClick, isPaused, onOverlayToggle, musicPath, bufferIndex, ID, activeCard } = props;
+  const { title, author, imagePath, small, moreIcon, children, onClick, isPaused, onOverlayToggle, musicPath, bufferIndex, ID } = props;
   const cardClassName = `music-card ${small ? 'small' : ''} ${isPaused ? 'active-card' : ''}`;
   const MAX_CHARACTERS = small ? 50 : 15;
   const truncateText = (text, maxLength) => {

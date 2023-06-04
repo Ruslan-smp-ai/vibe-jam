@@ -25,7 +25,7 @@ function App() {
   });
   const [activeCard, setActiveCard] = useState({
     cardIndex: null,
-    containerIndex: null,
+    containerIndex: "container1",
   });
 
   const [isPlayerActive, setIsPlayerActive] = useState(false);
@@ -141,7 +141,15 @@ function App() {
             activeCard={activeCard}
             ID={activeCard.containerIndex}
           >
-
+            <MusicCardContainer               
+                ID={activeCard.containerIndex}
+                title="In order"
+                slice={undefined}
+                activeCard={activeCard}
+                handleCardClick={handleCardClick}
+                isOrder
+                >
+            </MusicCardContainer>
           </Order>
         </Container>
       </div>

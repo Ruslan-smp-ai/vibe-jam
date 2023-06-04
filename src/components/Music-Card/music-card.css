@@ -122,3 +122,6 @@
 .like-btn:hover {
   cursor: pointer;
 }
+.player .music-card.small .text-block p {
+  font-size: 14px;
+}

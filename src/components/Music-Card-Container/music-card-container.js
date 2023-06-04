@@ -5,7 +5,7 @@ import MoreBtn from '../More-Btn/more-btn';
 import { MusicDataContext } from '../../contexts/MusicDataContext';
 
 const MusicCardContainer = (props) => {
-  const { ID, title, slice, handleCardClick, activeCard, isOrder } = props;
+  const { ID, title, slice, handleCardClick, activeCard, isOrder} = props;
   const musicData = useContext(MusicDataContext)[ID].slice(0, slice);
   const [toggle, setToggle] = useState(false);
   const containerClassName = `music-card-container ${isOrder? 'order' : ''}`;
@@ -13,7 +13,6 @@ const MusicCardContainer = (props) => {
   const handleOverlayToggle = (cardIndex) => {
     setToggle(!toggle);
     if (activeCard.cardIndex === cardIndex && activeCard.containerIndex === ID) {
-
       handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath,  musicData[cardIndex].musicPath, ID, false, toggle);
     } else {
       handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath, musicData[cardIndex].musicPath, ID, true, toggle);

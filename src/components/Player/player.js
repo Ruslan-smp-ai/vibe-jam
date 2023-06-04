@@ -48,9 +48,6 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
 
   const [nextClicked, setnextClicked] = useState(false);
 
-  const [whereClicked, setWhereClicked] = useState(null);
-  const [whereClickedID, setWhereClickedID] = useState(null);
-
   const [trackPosition, setTrackPosition] = useState({
     indexPosition: null,
     idPosition: null,
@@ -104,7 +101,9 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
       cardIndexCurrent: nextCardIndex,
     });
 
-    audioPlayer.src = nextMusic.musicPath;
+    if (audioPlayer.src != nextMusic.musicPath) {
+      audioPlayer.src = nextMusic.musicPath;
+    }
 
     doPlay();
 
@@ -217,7 +216,6 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     doPlay();
     audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
     audioPlayer.addEventListener('loadedmetadata', handleDurationChange);
-
     if (isShuffle) {
       const availableIndexes = musicData.reduce((indexes, _, index) => {
         if (!usedIndexes.includes(index)) {
@@ -237,8 +235,9 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
           musicPathCurrent: nextMusic.musicPath,
           cardIndexCurrent: randomIndex,
         });
-
-        audioPlayer.src = nextMusic.musicPath;
+        if (audioPlayer.src != nextMusic.musicPath) {
+          audioPlayer.src = nextMusic.musicPath;
+        }
         doPlay();
 
         setUsedIndexes([...usedIndexes, randomIndex]);
@@ -314,7 +313,6 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
       cardIndexCurrent: cardIndex,
     });
   }, [isPlayerActive]);
-
   useEffect(() => {
     setIsEnded(false);
     setTrackData({
@@ -329,7 +327,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     setUsedIndexes(prevIndexes => [...prevIndexes, cardIndex]);
     if (isPlayerActive) {
       if (cardIndexBuff != cardIndex || idBuff != ID) {
-        if (cardIndexBuff === null && nextClicked === true && whereClicked === cardIndex && whereClickedID === ID) {
+        if (cardIndexBuff === null && nextClicked === true && trackPosition.indexPosition === cardIndex && trackPosition.idPosition === ID) {
           handlePlayPause();
           setCardIndexBuff(cardIndex);
           setIdBuff(ID);
@@ -341,8 +339,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
           audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
           audioPlayer.addEventListener('loadedmetadata', handleDurationChange);
         }
-        audioPlayer.play();
-        setIsPlaying(true);
+        doPlay();
       } else {
         handlePlayPause();
       }
