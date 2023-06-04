@@ -1,0 +1,11 @@
+.music-time {
+  margin-left: 25px;
+  color: #c2c2c2;
+  font-size: 12px;
+  font-weight: 500;
+}
+.music-time.order {
+  margin-right: 0;
+  margin-left: 0;
+  font-size: 14px;
+}

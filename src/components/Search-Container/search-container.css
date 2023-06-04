@@ -1,0 +1,38 @@
+.search-container {
+  background-color: #131313;
+  position: fixed;
+  right: 30px;
+  top: 16px;
+  left: 112px;
+  height: 64px;
+  border-radius: 10px;
+  display: none;
+  z-index: 999;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-container.order-is-active {
+  right: 426px;
+}
+.search-container.search-is-active {
+  display: flex;
+}
+.search-container img {
+  height: 30px;
+  width: 30px;
+  margin-right: 16px;
+}
+.closebtn:hover {
+  cursor: pointer;
+}
+.search-container input {
+  width: 50%;
+  background: none;
+  border: none;
+  outline: none;
+  color: #d2d2d2;
+  font-size: 16px;
+  margin-left: 16px;
+  font-family: "Ubuntu", sans-serif;
+  caret-color: #d2d2d2;
+}

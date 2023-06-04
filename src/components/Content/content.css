@@ -1,0 +1,16 @@
+.content {
+  flex-grow: 1;
+  margin: 16px 16px 16px 112px;
+  background: linear-gradient(180deg, #101010 0%, #090909 100%);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: auto;
+}
+.content.player-is-active {
+  margin: 16px 16px 112px 112px;
+}
+.content.order-is-active {
+  margin: 16px 412px 112px 112px;
+}

@@ -1,0 +1,14 @@
+.order-list {
+  display: none;
+  width: 380px;
+  background: #0F0F0F;
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  bottom: 112px;
+  border-radius: 10px;
+  overflow: auto;
+}
+.order-list.order-is-active {
+  display: flex;
+}

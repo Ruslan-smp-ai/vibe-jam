@@ -1,0 +1,14 @@
+.more-btn {
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 16px;
+  margin-bottom: 9px;
+  background: linear-gradient(180deg, #7000FF 0%, #8F36FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  width: fit-content;
+}
+.more-btn {
+  cursor: pointer;
+}
