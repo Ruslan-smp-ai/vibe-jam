@@ -3,9 +3,9 @@ import './music-card-container.css';
 import MusicCard from '../Music-Card/music-card';
 import MoreBtn from '../More-Btn/more-btn';
 import { MusicDataContext } from '../../contexts/MusicDataContext';
-
+import { Link } from 'react-router-dom'
 const MusicCardContainer = (props) => {
-  const { ID, title, slice, handleCardClick, activeCard, isOrder} = props;
+  const { ID, title, slice, handleCardClick, activeCard, isOrder, path} = props;
   const musicData = useContext(MusicDataContext)[ID].slice(0, slice);
   const [toggle, setToggle] = useState(false);
   const containerClassName = `music-card-container ${isOrder? 'order' : ''}`;
@@ -43,7 +43,7 @@ const MusicCardContainer = (props) => {
         ))}
       </div>
 
-      {!isOrder && <MoreBtn />}
+      {!isOrder && <Link to={path}><MoreBtn /></Link>}
     </div>
   );
 };

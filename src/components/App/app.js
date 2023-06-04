@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Container from '../Container/container';
 import Order from '../Order/order'
 import Menu from '../Menu/menu';
 import Content from '../Content/content';
+import { BrowserRouter } from 'react-router-dom';
 import Player from '../Player/player';
 import Head from '../Head/head';
 import MoreBtn from '../More-Btn/more-btn';
@@ -76,83 +78,110 @@ function App() {
 
   return (
     <MusicDataProvider>
-      <div className="app">
-        <Container onContextMenu={handleContextMenu}>
-          <Menu
-            activeIcon={activeIcon}
-            handleClick={handleClick}
-            isSearchActive={isSearchActive}
-            setIsSearchActive={setIsSearchActive}
-            handleCardClick={handleCardClick}
-            isPlayerActive={isPlayerActive}
-          />
-            <Content isPlayerActive={isPlayerActive} isOrderActive={isOrderActive}>
-            <Head>
-              <Icons />
-            </Head>
-
-            <MusicCardContainer
-              ID="container1"
-              title="Recently Listened"
-              slice={6}
-              handleCardClick={handleCardClick}
-              activeCard={activeCard}
-            >
-            </MusicCardContainer>
-            
-            <MusicCardContainer
-              ID="container2"
-              title="Sad vibes"
-              slice={6}
-              handleCardClick={handleCardClick}
-              activeCard={activeCard}
-            >
-            </MusicCardContainer>
-            
-            <Search
+      <BrowserRouter>
+        <div className="app">
+          <Container onContextMenu={handleContextMenu}>
+            <Menu
               activeIcon={activeIcon}
               handleClick={handleClick}
               isSearchActive={isSearchActive}
               setIsSearchActive={setIsSearchActive}
-              isOrderActive={isOrderActive}
+              handleCardClick={handleCardClick}
+              isPlayerActive={isPlayerActive}
             />
-          </Content>
-          <Player
-            title={playerData.title}
-            author={playerData.author}
-            imagePath={playerData.imagePath}
-            musicPath={playerData.musicPath}
-            isPaused={playerData.isPaused}
-            isPlayerActive={isPlayerActive}
-            setIsPlay={setIsPlay}
-            handleOrderClick={handleOrderClick}
-            ID = {activeCard.containerIndex}
-            cardIndex={activeCard.cardIndex}
-            toggle={playerData.toggle}
-            isOrderTrue={isOrderTrue}
-            isOrderActive={isOrderActive}
-            handlePreviousCardClick={handlePreviousCardClick}
-            handleNextCardClick={handleNextCardClick}
-          />
-          <Order 
-            isOrderActive={isOrderActive}
-            handleCardClick={handleCardClick}
-            handleOrderCardClicked={handleOrderCardClicked}
-            activeCard={activeCard}
-            ID={activeCard.containerIndex}
-          >
-            <MusicCardContainer               
+            <Content isPlayerActive={isPlayerActive} isOrderActive={isOrderActive}>
+              <Head>
+                <Icons />
+              </Head>
+              <Routes>
+                <Route exact path="/" element={<>
+                  <MusicCardContainer
+                    ID="container1"
+                    title="Recently Listened"
+                    slice={6}
+                    handleCardClick={handleCardClick}
+                    activeCard={activeCard}
+                    path="/recently-listened"
+                  >
+                  </MusicCardContainer>
+
+                  <MusicCardContainer
+                    ID="container2"
+                    title="Sad vibes"
+                    slice={6}
+                    handleCardClick={handleCardClick}
+                    activeCard={activeCard}
+                    path="/sad-vibes"
+                  >
+                  </MusicCardContainer></>}>
+                </Route>
+                <Route path="/recently-listened" element={
+                  <MusicCardContainer
+                    ID="container1"
+                    title="Recently Listened"
+                    slice={undefined}
+                    handleCardClick={handleCardClick}
+                    activeCard={activeCard}
+
+                  >
+                  </MusicCardContainer>}>
+                </Route>
+                <Route path="/sad-vibes" element={
+                  <MusicCardContainer
+                    ID="container2"
+                    title="Sad Vibes"
+                    slice={undefined}
+                    handleCardClick={handleCardClick}
+                    activeCard={activeCard}
+
+                  />}>
+                </Route>
+              </Routes>
+              <Search
+                activeIcon={activeIcon}
+                handleClick={handleClick}
+                isSearchActive={isSearchActive}
+                setIsSearchActive={setIsSearchActive}
+                isOrderActive={isOrderActive}
+              />
+            </Content>
+            <Player
+              title={playerData.title}
+              author={playerData.author}
+              imagePath={playerData.imagePath}
+              musicPath={playerData.musicPath}
+              isPaused={playerData.isPaused}
+              isPlayerActive={isPlayerActive}
+              setIsPlay={setIsPlay}
+              handleOrderClick={handleOrderClick}
+              ID={activeCard.containerIndex}
+              cardIndex={activeCard.cardIndex}
+              toggle={playerData.toggle}
+              isOrderTrue={isOrderTrue}
+              isOrderActive={isOrderActive}
+              handlePreviousCardClick={handlePreviousCardClick}
+              handleNextCardClick={handleNextCardClick}
+            />
+            <Order
+              isOrderActive={isOrderActive}
+              handleCardClick={handleCardClick}
+              handleOrderCardClicked={handleOrderCardClicked}
+              activeCard={activeCard}
+              ID={activeCard.containerIndex}
+            >
+              <MusicCardContainer
                 ID={activeCard.containerIndex}
                 title="In order"
                 slice={undefined}
                 activeCard={activeCard}
                 handleCardClick={handleCardClick}
                 isOrder
-                >
-            </MusicCardContainer>
-          </Order>
-        </Container>
-      </div>
+              >
+              </MusicCardContainer>
+            </Order>
+          </Container>
+        </div>
+      </BrowserRouter>
     </MusicDataProvider>
   );
 }

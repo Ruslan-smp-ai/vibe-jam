@@ -7,6 +7,7 @@ import story from "../../svg/history.svg";
 import mediastack from "../../svg/mediastack.svg";
 import navigate from "../../svg/navigator.svg";
 import vip from "../../svg/vip.svg";
+import { Link } from 'react-router-dom'
 
 const Menu = ({ activeIcon, handleClick, isSearchActive, setIsSearchActive, isPlayerActive }) => {
     const menuClassName = `menu ${isPlayerActive ? 'player-is-active' : ''}`;
@@ -29,9 +30,11 @@ const Menu = ({ activeIcon, handleClick, isSearchActive, setIsSearchActive, isPl
     return (
       <div className={menuClassName}>
         <ul>
+        <Link to="/">
           <li className={`menu-element ${activeMenuItem === 1 ? 'active' : ''}`} onClick={() => handleItemClick(1)}>
             <img src={home} className="icon" alt="Home" />
           </li>
+        </Link>
           <li className={`search-element ${activeMenuItem === 2 ? 'active' : ''}`} onClick={() => handleItemClick(2)}>
             <img src={isSearchActive ? searchActive : searchInactive} className="icon" alt="Search" />
           </li>
