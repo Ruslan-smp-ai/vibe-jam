@@ -20,7 +20,8 @@ export const MusicDataProvider = ({ children }) => {
             { title: 'XO tour Lif3', author: 'Lil Uzi Vert', imagePath: '/jpg/XO tour Lif3.jpg', musicPath: '/mp3/XO tour life.mp3' },
             { title: 'SkeletonRap', author: 'Bones', imagePath: '/jpg/SkeletonRap.jpg', musicPath: '/mp3/test.mp3' },
             { title: 'Me, Myself & I', author: 'Oliver Tree', imagePath: '/jpg/Me, Myself & I.jpg', musicPath: '/mp3/test.mp3' },
-            { title: 'Skin', author: 'IVOXYGEN', imagePath: '/jpg/Skin.jpg' },
+            { title: 'Skin', author: 'IVOXYGEN', imagePath: '/jpg/Skin.jpg', musicPath: '/mp3/test.mp3' },
+            { title: 'Героинка', author: 'СЕРЕГА ПИРАТ', imagePath: '/jpg/Героинка.jpg', musicPath: '/mp3/Героинка.mp3' },
         ],
     });
 

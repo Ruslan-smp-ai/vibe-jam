@@ -59,7 +59,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   const shuffleIcon = isShuffle ? shuffleActive : shuffle;
   const likeIcon = isLiked ? likeActive : likeInactive;
 
-  const [volume, setVolume] = useState(20);
+  const [volume, setVolume] = useState(50);
 
   const playerClassName = `player ${isPlayerActive ? 'player-is-active' : ''}`;
 

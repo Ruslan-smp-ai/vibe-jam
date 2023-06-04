@@ -112,6 +112,7 @@ function App() {
                     handleCardClick={handleCardClick}
                     activeCard={activeCard}
                     path="/sad-vibes"
+                    
                   >
                   </MusicCardContainer></>}>
                 </Route>
@@ -122,7 +123,7 @@ function App() {
                     slice={undefined}
                     handleCardClick={handleCardClick}
                     activeCard={activeCard}
-
+                    isMoreActive
                   >
                   </MusicCardContainer>}>
                 </Route>
@@ -133,7 +134,7 @@ function App() {
                     slice={undefined}
                     handleCardClick={handleCardClick}
                     activeCard={activeCard}
-
+                   isMoreActive
                   />}>
                 </Route>
               </Routes>
@@ -176,6 +177,7 @@ function App() {
                 activeCard={activeCard}
                 handleCardClick={handleCardClick}
                 isOrder
+                isMoreActive
               >
               </MusicCardContainer>
             </Order>
