@@ -22,13 +22,15 @@ import { MusicDataContext } from '../../contexts/MusicDataContext';
 const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused, ID, cardIndex, toggle, handleOrderClick, isOrderTrue, handlePreviousCardClick, handleNextCardClick, isOrderActive }) => {
   const musicData = useContext(MusicDataContext)[ID];
 
-  const [titleCurrent, setTitleCurrent] = useState(title);
-  const [authorCurrent, setAuthorCurrent] = useState(author);
-  const [imagePathCurrent, setImagePathCurrent] = useState(imagePath);
-  const [musicPathCurrent, setMusicPathCurrent] = useState(musicPath);
-  const [cardIndexCurrent, setCardIndexCurrent] = useState(0);
+  const [trackData, setTrackData] = useState({
+    titleCurrent: title,
+    authorCurrent: author,
+    imagePathCurrent: imagePath,
+    musicPathCurrent: musicPath,
+    cardIndexCurrent: 0,
+  });
+
   const [isEnded, setIsEnded] = useState(false);
-  const [testElem, setTestElem] = useState(cardIndex);
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -45,8 +47,14 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   const [duration, setDuration] = useState(0);
 
   const [nextClicked, setnextClicked] = useState(false);
+
   const [whereClicked, setWhereClicked] = useState(null);
   const [whereClickedID, setWhereClickedID] = useState(null);
+
+  const [trackPosition, setTrackPosition] = useState({
+    indexPosition: null,
+    idPosition: null,
+  });
 
   const [isOrderClicked, setIsOrderClicked] = useState(true);
 
@@ -70,9 +78,45 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     }
   };
 
-  useEffect(() => {
-    setTestElem(cardIndex);
-  }, [cardIndex]);
+  const doPlay = () => {
+    const audioPlayer = document.getElementById('audio-player');
+    audioPlayer.play();
+    setIsPlaying(true);
+  }
+
+  const doPause = () => {
+    const audioPlayer = document.getElementById('audio-player');
+    audioPlayer.pause();
+    setIsPlaying(false);
+  }
+
+
+  const toNextTrack = () => {
+    const audioPlayer = document.getElementById('audio-player');
+    const nextCardIndex = trackData.cardIndexCurrent + 1;
+    const nextMusic = musicData[nextCardIndex];
+
+    setTrackData({
+      titleCurrent: nextMusic.title,
+      authorCurrent: nextMusic.author,
+      imagePathCurrent: nextMusic.imagePath,
+      musicPathCurrent: nextMusic.musicPath,
+      cardIndexCurrent: nextCardIndex,
+    });
+
+    audioPlayer.src = nextMusic.musicPath;
+
+    doPlay();
+
+    setTrackPosition({
+      indexPosition: nextCardIndex,
+      idPosition: ID,
+    });
+
+    handleNextCardClick(nextCardIndex, ID);
+    setnextClicked(true);
+    setCardIndexBuff(null);
+  }
 
   useEffect(() => {
     if (isEnded === true) {
@@ -83,58 +127,41 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
 
       if (repeatModeImage === repeatOne) {
         const audioPlayer = document.getElementById('audio-player');
-        audioPlayer.src = musicData[cardIndexCurrent].musicPath;
-        audioPlayer.play();
-        setIsPlaying(true);
+        audioPlayer.src = musicData[trackData.cardIndexCurrent].musicPath;
+        doPlay();
         setIsEnded(false);
         return;
       }
 
-      if (cardIndexCurrent < musicData.length - 1) {
-        const audioPlayer = document.getElementById('audio-player');
-        const nextCardIndex = cardIndexCurrent + 1;
-        const nextMusic = musicData[nextCardIndex];
-
-        setTitleCurrent(nextMusic.title);
-        setAuthorCurrent(nextMusic.author);
-        setImagePathCurrent(nextMusic.imagePath);
-        setMusicPathCurrent(nextMusic.musicPath);
-        setCardIndexCurrent(nextCardIndex);
-
-        audioPlayer.src = nextMusic.musicPath;
-        audioPlayer.play();
-        setIsPlaying(true);
-
-        setWhereClickedID(ID);
-        setWhereClicked(nextCardIndex);
-        handleNextCardClick(nextCardIndex, ID);
-        setnextClicked(true);
-        setCardIndexBuff(null);
-        console.log(cardIndex);
+      if (trackData.cardIndexCurrent < musicData.length - 1) {
+        toNextTrack();
       } else {
         const audioPlayer = document.getElementById('audio-player');
         if (repeatModeImage === repeat) {
-          audioPlayer.pause();
-          setIsPlaying(false);
+          doPause();
         } else {
           const localCardIndex = 0;
           const localMusic = musicData[localCardIndex];
-          setTitleCurrent(localMusic.title);
-          setAuthorCurrent(localMusic.author);
-          setImagePathCurrent(localMusic.imagePath);
-          setMusicPathCurrent(localMusic.musicPath);
-          setCardIndexCurrent(localCardIndex);
+
+          setTrackData({
+            titleCurrent: localMusic.title,
+            authorCurrent: localMusic.author,
+            imagePathCurrent: localMusic.imagePath,
+            musicPathCurrent: localMusic.musicPath,
+            cardIndexCurrent: localCardIndex,
+          });
 
           audioPlayer.src = localMusic.musicPath;
-          audioPlayer.play();
-          setIsPlaying(true);
+          doPlay();
 
-          setWhereClickedID(ID);
-          setWhereClicked(localCardIndex);
+          setTrackPosition({
+            indexPosition: localCardIndex,
+            idPosition: ID,
+          });
+
           handleNextCardClick(localCardIndex, ID);
           setnextClicked(true);
           setCardIndexBuff(null);
-          console.log(cardIndex);
         }
       }
       setIsEnded(false);
@@ -157,7 +184,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   };
 
   const handleTimeUpdate = () => {
-    if (musicPathCurrent !== null) {
+    if (trackData.musicPathCurrent !== null) {
       const audioPlayer = document.getElementById('audio-player');
       setCurrentTime(audioPlayer.currentTime);
 
@@ -187,8 +214,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     }
 
     const audioPlayer = document.getElementById('audio-player');
-    audioPlayer.play();
-    setIsPlaying(true);
+    doPlay();
     audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
     audioPlayer.addEventListener('loadedmetadata', handleDurationChange);
 
@@ -204,69 +230,62 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
         const randomIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
         const nextMusic = musicData[randomIndex];
 
-        setTitleCurrent(nextMusic.title);
-        setAuthorCurrent(nextMusic.author);
-        setImagePathCurrent(nextMusic.imagePath);
-        setMusicPathCurrent(nextMusic.musicPath);
-        setCardIndexCurrent(randomIndex);
+        setTrackData({
+          titleCurrent: nextMusic.title,
+          authorCurrent: nextMusic.author,
+          imagePathCurrent: nextMusic.imagePath,
+          musicPathCurrent: nextMusic.musicPath,
+          cardIndexCurrent: randomIndex,
+        });
 
         audioPlayer.src = nextMusic.musicPath;
-        audioPlayer.play();
-        setIsPlaying(true);
+        doPlay();
 
         setUsedIndexes([...usedIndexes, randomIndex]);
-        setWhereClickedID(ID);
-        setWhereClicked(randomIndex);
+
+        setTrackPosition({
+          indexPosition: randomIndex,
+          idPosition: ID,
+        });
+
         handleNextCardClick(randomIndex, ID);
         setnextClicked(true);
         setCardIndexBuff(null);
       }
     } else {
-      if (cardIndexCurrent < musicData.length - 1) {
-        const nextCardIndex = cardIndexCurrent + 1;
-        const nextMusic = musicData[nextCardIndex];
-
-        setTitleCurrent(nextMusic.title);
-        setAuthorCurrent(nextMusic.author);
-        setImagePathCurrent(nextMusic.imagePath);
-        setMusicPathCurrent(nextMusic.musicPath);
-        setCardIndexCurrent(nextCardIndex);
-
-        audioPlayer.src = nextMusic.musicPath;
-        audioPlayer.play();
-        setIsPlaying(true);
-
-        setWhereClickedID(ID);
-        setWhereClicked(nextCardIndex);
-        handleNextCardClick(nextCardIndex, ID);
-        setnextClicked(true);
-        setCardIndexBuff(null);
-        console.log(cardIndex);
+      if (trackData.cardIndexCurrent < musicData.length - 1) {
+        toNextTrack();
       }
     }
   };
 
   const handlePreviousClick = () => {
     setIsEnded(false);
-    if (cardIndexCurrent > 0) {
-      setTitleCurrent(musicData[cardIndexCurrent - 1].title);
-      setAuthorCurrent(musicData[cardIndexCurrent - 1].author);
-      setImagePathCurrent(musicData[cardIndexCurrent - 1].imagePath);
-      const newMusicPath = musicData[cardIndexCurrent - 1].musicPath;
-      setMusicPathCurrent(newMusicPath);
-      setCardIndexCurrent(cardIndexCurrent - 1);
+    if (trackData.cardIndexCurrent > 0) {
+
+      const newMusicPath = musicData[trackData.cardIndexCurrent - 1].musicPath;
+
+      setTrackData({
+        titleCurrent: musicData[trackData.cardIndexCurrent - 1].title,
+        authorCurrent: musicData[trackData.cardIndexCurrent - 1].author,
+        imagePathCurrent: musicData[trackData.cardIndexCurrent - 1].imagePath,
+        musicPathCurrent: newMusicPath,
+        cardIndexCurrent: trackData.cardIndexCurrent - 1
+      });
 
       if (isPlayerActive) {
         const audioPlayer = document.getElementById('audio-player');
         audioPlayer.src = newMusicPath;
-        audioPlayer.play();
-        setIsPlaying(true);
+        doPlay();
         audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
         audioPlayer.addEventListener('loadedmetadata', handleDurationChange);
       }
-      setWhereClickedID(ID);
-      setWhereClicked(cardIndexCurrent - 1);
-      handlePreviousCardClick(cardIndexCurrent - 1, ID);
+
+      setTrackPosition({
+        indexPosition: trackData.cardIndexCurrent - 1,
+        idPosition: ID,
+      });
+      handlePreviousCardClick(trackData.cardIndexCurrent - 1, ID);
       setnextClicked(true);
       setCardIndexBuff(null);
     }
@@ -287,25 +306,24 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   };
 
   useEffect(() => {
-
-  }, [musicPath, isPlayerActive, isOrderTrue, isOrderClicked]);
-
-  useEffect(() => {
-    setTitleCurrent(title);
-    setAuthorCurrent(author);
-    setImagePathCurrent(imagePath);
-    setCardIndexCurrent(cardIndex);
-    setMusicPathCurrent(musicPath);
-    setTestElem(cardIndex);
+    setTrackData({
+      titleCurrent: title,
+      authorCurrent: author,
+      imagePathCurrent: imagePath,
+      musicPathCurrent: musicPath,
+      cardIndexCurrent: cardIndex,
+    });
   }, [isPlayerActive]);
 
   useEffect(() => {
     setIsEnded(false);
-    setAuthorCurrent(author);
-    setImagePathCurrent(imagePath);
-    setCardIndexCurrent(cardIndex);
-    setMusicPathCurrent(musicPath);
-    setTitleCurrent(title);
+    setTrackData({
+      titleCurrent: title,
+      authorCurrent: author,
+      imagePathCurrent: imagePath,
+      musicPathCurrent: musicPath,
+      cardIndexCurrent: cardIndex,
+    });
     setnextClicked(false);
     setUsedIndexes([]);
     setUsedIndexes(prevIndexes => [...prevIndexes, cardIndex]);
@@ -337,7 +355,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   return (
     <div className={playerClassName}>
 
-      <MusicCard title={titleCurrent} author={authorCurrent} imagePath={imagePathCurrent} musicPath={musicPathCurrent} small={true} showOverlay={false}>
+      <MusicCard title={trackData.titleCurrent} author={trackData.authorCurrent} imagePath={trackData.imagePathCurrent} musicPath={trackData.musicPathCurrent} small={true} showOverlay={false}>
         <img className='like-icon like-btn' onClick={handleLike} src={likeIcon} alt="Like" />
       </MusicCard>
 
