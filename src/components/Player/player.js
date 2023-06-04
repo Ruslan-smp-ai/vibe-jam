@@ -1,5 +1,5 @@
 import './player.css';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import likeInactive from '../../svg/like-order.svg'
 import likeActive from '../../svg/liked.svg'
 import previous from '../../svg/previous.svg'
@@ -18,6 +18,7 @@ import speaker from '../../svg/speaker.svg'
 import speakerOff from '../../svg/speaker-off.svg'
 import MusicTime from '../Music-Time/music-time'
 import { MusicDataContext } from '../../contexts/MusicDataContext';
+import ContextMenu from '../Context-Menu/context-menu';
 
 const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused, ID, cardIndex, toggle, handleOrderClick, isOrderTrue, handlePreviousCardClick, handleNextCardClick, isOrderActive }) => {
   const musicData = useContext(MusicDataContext)[ID];
@@ -64,6 +65,45 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   const playerClassName = `player ${isPlayerActive ? 'player-is-active' : ''}`;
 
   const [repeatModeImage, setRepeatModeImage] = useState(repeat);
+
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const contextMenuRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (contextMenuVisible && !contextMenuRef.current.contains(e.target)) {
+        setContextMenuVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [contextMenuVisible]);
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    const { clientX, clientY } = e;
+    setContextMenuPosition({ x: clientX, y: clientY });
+    setContextMenuVisible(true);
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenuVisible(false);
+  };
+
+  const handleCopyLink = () => {
+    // Логика для копирования ссылки
+    handleCloseContextMenu();
+  };
+
+  const handleShowQRCode = () => {
+    // Логика для отображения QR-кода
+    handleCloseContextMenu();
+  };
 
   const handleRepeatModeClick = () => {
     if (repeatModeImage === repeat) {
@@ -313,6 +353,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
       cardIndexCurrent: cardIndex,
     });
   }, [isPlayerActive]);
+
   useEffect(() => {
     setIsEnded(false);
     setTrackData({
@@ -368,7 +409,25 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
 
           <img className='repeat-btn' src={repeatModeImage} alt='Repeat' onClick={handleRepeatModeClick} />
           <img className='shuffle-btn' onClick={handleShuffle} src={shuffleIcon} alt="Shuffle" />
-          <img className='share-btn' src={share} alt="Share" />
+          
+          <img
+            className="share-btn"
+            src={share}
+            alt="Share"
+            onContextMenu={handleContextMenu}
+            onClick={handleContextMenu}
+          />
+          {contextMenuVisible && (
+            <div ref={contextMenuRef}>
+              <ContextMenu
+                x={contextMenuPosition.x}
+                y={contextMenuPosition.y}
+                onClose={handleCloseContextMenu}
+                onCopyLink={handleCopyLink}
+                onShowQRCode={handleShowQRCode}
+              />
+            </div>
+          )}
 
         </div>
       </div>
