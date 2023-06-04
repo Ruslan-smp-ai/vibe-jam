@@ -13,7 +13,7 @@ const MusicCardContainer = (props) => {
   const handleOverlayToggle = (cardIndex) => {
     setToggle(!toggle);
     if (activeCard.cardIndex === cardIndex && activeCard.containerIndex === ID) {
-      // If the clicked card is already active, set the activeCard state to null
+
       handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath,  musicData[cardIndex].musicPath, ID, false, toggle);
     } else {
       handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath, musicData[cardIndex].musicPath, ID, true, toggle);
