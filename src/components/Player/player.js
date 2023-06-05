@@ -15,6 +15,8 @@ import share from '../../svg/share.svg'
 import MusicCard from '../Music-Card/music-card';
 import order from '../../svg/order.svg'
 import speaker from '../../svg/speaker.svg'
+import speaker33 from '../../svg/speaker33.svg'
+import speaker66 from '../../svg/speaker66.svg'
 import speakerOff from '../../svg/speaker-off.svg'
 import MusicTime from '../Music-Time/music-time'
 import { MusicDataContext } from '../../contexts/MusicDataContext';
@@ -54,18 +56,19 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     indexPosition: null,
     idPosition: null,
   });
-
+  
   const [isOrderClicked, setIsOrderClicked] = useState(true);
 
   const playIcon = isPlaying ? pause : play;
   const shuffleIcon = isShuffle ? shuffleActive : shuffle;
   const likeIcon = isLiked ? likeActive : likeInactive;
 
-  const [volume, setVolume] = useState(50);
-
+  const [volume, setVolume] = useState(100);
+  const [oldVolume, setOldVolume] = useState(100);
   const playerClassName = `player ${isPlayerActive ? 'player-is-active' : ''}`;
 
   const [repeatModeImage, setRepeatModeImage] = useState(repeat);
+  const [speakerImage, setSpeakerImage] = useState(speaker66);
 
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
@@ -336,12 +339,40 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     const time = parseFloat(event.target.value);
     setCurrentTime(time);
     audioPlayer.currentTime = time;
+    
   };
+
+  const handleSpeakerClick = () => {
+    const volumeLevel = 50; 
+    const audioPlayer = document.getElementById('audio-player');
+    if (speakerImage === speaker66 || speakerImage === speaker33) {
+      setOldVolume(volume);
+      setVolume(0);
+      audioPlayer.volume = 0;
+      setSpeakerImage(speakerOff);
+    } else {
+      if (oldVolume <=50) {
+        setSpeakerImage(speaker33);
+      } else {
+        setSpeakerImage(speaker66);
+      }
+      setVolume(oldVolume);
+      audioPlayer.volume = oldVolume/100;
+    }
+  }
+
 
   const handleVolumeSliderChange = (event) => {
     const audioPlayer = document.getElementById('audio-player');
     const volumeLevel = parseFloat(event.target.value);
     setVolume(volumeLevel);
+    if (volumeLevel <= 100 && volumeLevel > 50) {
+      setSpeakerImage(speaker66);
+    } else if (volumeLevel <= 50 && volumeLevel > 1) {
+      setSpeakerImage(speaker33)
+    } else {
+      setSpeakerImage(speakerOff)
+    }
     audioPlayer.volume = volumeLevel / 100;
   };
 
@@ -438,7 +469,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
       <div className='voice-control'>
 
         <img className='order-btn' onClick={handleOrderBtnClicked} src={order} alt="Order" />
-        <img className='speaker-ico' src={speaker} alt="Speaker" />
+        <img className='speaker-ico' src={speakerImage} onClick={handleSpeakerClick} alt="Speaker" />
 
         <input type='range' min={0} max={100} value={volume} className='volume-slider' onChange={handleVolumeSliderChange}></input>
 
