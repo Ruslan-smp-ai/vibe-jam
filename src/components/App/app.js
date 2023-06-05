@@ -27,7 +27,7 @@ function App() {
   });
   const [activeCard, setActiveCard] = useState({
     cardIndex: null,
-    containerIndex: "container1",
+    containerIndex: "recentlyListened",
   });
 
   const [isPlayerActive, setIsPlayerActive] = useState(false);
@@ -96,7 +96,7 @@ function App() {
               <Routes>
                 <Route exact path="/" element={<>
                   <MusicCardContainer
-                    ID="container1"
+                    ID="recentlyListened"
                     title="Recently Listened"
                     slice={6}
                     handleCardClick={handleCardClick}
@@ -106,19 +106,19 @@ function App() {
                   </MusicCardContainer>
 
                   <MusicCardContainer
-                    ID="container2"
+                    ID="sadVibes"
                     title="Sad vibes"
                     slice={6}
                     handleCardClick={handleCardClick}
                     activeCard={activeCard}
                     path="/sad-vibes"
-                    
                   >
-                  </MusicCardContainer></>}>
+                  </MusicCardContainer>
+                  </>}>
                 </Route>
                 <Route path="/recently-listened" element={
                   <MusicCardContainer
-                    ID="container1"
+                    ID="recentlyListened"
                     title="Recently Listened"
                     slice={undefined}
                     handleCardClick={handleCardClick}
@@ -127,9 +127,21 @@ function App() {
                   >
                   </MusicCardContainer>}>
                 </Route>
+                <Route path="/search-results" element={                  
+                <MusicCardContainer
+                    ID="searchResult"
+                    title="Search Results"
+                    slice={undefined}
+                    handleCardClick={handleCardClick}
+                    activeCard={activeCard}
+                    isMoreActive
+                  >
+                  </MusicCardContainer>
+                  }>
+                </Route>
                 <Route path="/sad-vibes" element={
                   <MusicCardContainer
-                    ID="container2"
+                    ID="sadVibes"
                     title="Sad Vibes"
                     slice={undefined}
                     handleCardClick={handleCardClick}

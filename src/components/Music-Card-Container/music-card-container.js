@@ -6,16 +6,17 @@ import { MusicDataContext } from '../../contexts/MusicDataContext';
 import { Link } from 'react-router-dom'
 const MusicCardContainer = (props) => {
   const { ID, title, slice, handleCardClick, activeCard, isOrder, path, isChild, isMoreActive} = props;
-  const musicData = useContext(MusicDataContext)[ID].slice(0, slice);
+  const musicData = useContext(MusicDataContext).musicData[ID] || [];
+  const slicedMusicData = musicData.slice(0, slice);
   const [toggle, setToggle] = useState(false);
   const containerClassName = `music-card-container ${isOrder? 'order' : ''}`;
 
-  const handleOverlayToggle = (cardIndex) => {
+  const handleOverlayToggle = (cardIndex) => {  
     setToggle(!toggle);
     if (activeCard.cardIndex === cardIndex && activeCard.containerIndex === ID) {
-      handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath,  musicData[cardIndex].musicPath, ID, false, toggle);
+      handleCardClick(cardIndex, slicedMusicData[cardIndex].title, slicedMusicData[cardIndex].author, slicedMusicData[cardIndex].imagePath,  slicedMusicData[cardIndex].musicPath, ID, false, toggle);
     } else {
-      handleCardClick(cardIndex, musicData[cardIndex].title, musicData[cardIndex].author, musicData[cardIndex].imagePath, musicData[cardIndex].musicPath, ID, true, toggle);
+      handleCardClick(cardIndex, slicedMusicData[cardIndex].title, slicedMusicData[cardIndex].author, slicedMusicData[cardIndex].imagePath, slicedMusicData[cardIndex].musicPath, ID, true, toggle);
     }
   };
 
@@ -23,10 +24,10 @@ const MusicCardContainer = (props) => {
     <div className="container-music-card">
       <h1>{title}</h1>
       <div className={containerClassName}>
-        {musicData.map((music, index) => (
+        {slicedMusicData.map((music, index) => (
           <MusicCard
             small={isOrder ? true : false}
-            key={music.title}
+            key={index}
             title={music.title}
             author={music.author}
             imagePath={music.imagePath}

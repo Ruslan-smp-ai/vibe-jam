@@ -21,7 +21,7 @@ import { MusicDataContext } from '../../contexts/MusicDataContext';
 import ContextMenu from '../Context-Menu/context-menu';
 
 const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused, ID, cardIndex, toggle, handleOrderClick, isOrderTrue, handlePreviousCardClick, handleNextCardClick, isOrderActive }) => {
-  const musicData = useContext(MusicDataContext)[ID];
+  const musicData = useContext(MusicDataContext).musicData[ID] || [];
 
   const [trackData, setTrackData] = useState({
     titleCurrent: title,
@@ -31,6 +31,7 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
     cardIndexCurrent: 0,
   });
 
+  
   const [isEnded, setIsEnded] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,12 +97,12 @@ const Player = ({ title, author, imagePath, musicPath, isPlayerActive, isPaused,
   };
 
   const handleCopyLink = () => {
-    // Логика для копирования ссылки
+
     handleCloseContextMenu();
   };
 
   const handleShowQRCode = () => {
-    // Логика для отображения QR-кода
+
     handleCloseContextMenu();
   };
 
